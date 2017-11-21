@@ -67,14 +67,44 @@ public class MainActivity extends AppCompatActivity {
         btnGetPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Call<PostObj> call = apiService.getPost(2);
+                call.enqueue(new Callback<PostObj>() {
+                    @Override
+                    public void onResponse(Call<PostObj> call, Response<PostObj> response) {
+                        PostObj resultado = response.body();
+                        mostrarResltado(new Gson().toJson(resultado));
+                    }
 
+                    @Override
+                    public void onFailure(Call<PostObj> call, Throwable t) {
+                        mostrarResltado("Error: "+t.getMessage());
+                    }
+                });
             }
         });
 
         btnPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                PostObj postObj = new PostObj();
+                postObj.setId(5000);
+                postObj.setTitle("Android rocks!");
+                postObj.setBody("Este es un body");
+                postObj.setUserId(56);
 
+                Call<PostObj> call = apiService.enviarPost(postObj);
+                call.enqueue(new Callback<PostObj>() {
+                    @Override
+                    public void onResponse(Call<PostObj> call, Response<PostObj> response) {
+                        PostObj resultado = response.body();
+                        mostrarResltado(new Gson().toJson(resultado));
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostObj> call, Throwable t) {
+                        mostrarResltado("Error: "+t.getMessage());
+                    }
+                });
             }
         });
     }
